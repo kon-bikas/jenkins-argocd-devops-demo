@@ -43,6 +43,7 @@ pipeline {
                      mv ./k8s/goserver.yml.tmp ./k8s/goserver.yml
                      
                      git add ./k8s/goserver.yml
+                     git commit -m "Jenkins image update to tag ${TAG}"
                      git push
                 '''
             }
