@@ -36,11 +36,8 @@ pipeline {
                     HEAD_COMMIT=$(git rev-parse --short HEAD)
                     TAG=$HEAD_COMMIT-$BUILD_NUMBER
 
-                    kubectl patch --local \
-                        -f k8s/goserver.yml \
-                        -p """{"spec":{"template":{"spec":{"containers":[{"name":"goserver-container", "image":"${CONTAINER_REPO}:${TAG}"}]}}}}""" \
-                        -o yaml > ./k8s/goserver.yml.tmp
-                        
+                    yq -i -y """.spec.template.spec.containers[0].image = "\\"${MY_VAR}"\\"""" k8s/goserver.yml 
+                       
                      mv ./k8s/goserver.yml.tmp ./k8s/goserver.yml
                      
                      git add ./k8s/goserver.yml
