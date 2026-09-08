@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         AWS_REGION = 'eu-west-3'
+        CONTAINER_REPO = '138465306868.dkr.ecr.${AWS_REGION}.amazonaws.com/devops/go-server'
     }
 
     stages {
@@ -23,8 +24,26 @@ pipeline {
                     /kaniko/executor \
                     --context ${WORKSPACE} \
                     --dockerfile ${WORKSPACE}/Dockerfile \
-                    --destination 138465306868.dkr.ecr.${AWS_REGION}.amazonaws.com/devops/go-server:latest \
-                    --destination 138465306868.dkr.ecr.${AWS_REGION}.amazonaws.com/devops/go-server:${TAG}
+                    --destination ${CONTAINER_REPO}:latest \
+                    --destination ${CONTAINER_REPO}:${TAG}
+                '''
+            }
+        }
+        stage('Update image tag in repo manifest') {
+            steps {
+                sh '''
+                    HEAD_COMMIT=$(git rev-parse --short HEAD)
+                    TAG=$HEAD_COMMIT-$BUILD_NUMBER
+
+                    kubectl patch --local \
+                        -f k8s/goserver.yml \
+                        -p '{"spec":{"template":{"spec":{"containers":[{"name":"goserver-container", "image":"${CONTAINER_REPO}:${TAG}"}]}}}}' \
+                        -o yaml > ./k8s/goserver.yml.tmp
+                        
+                     mv ./k8s/goserver.yml.tmp ./k8s/goserver.yml
+                     
+                     git add ./k8s/goserver.yml
+                     git push
                 '''
             }
         }
