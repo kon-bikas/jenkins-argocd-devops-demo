@@ -2,8 +2,7 @@ pipeline {
     agent none
 
     environment {
-        AWS_REGION = 'eu-west-3'
-        CONTAINER_REPO = '138465306868.dkr.ecr.${AWS_REGION}.amazonaws.com/devops/go-server'
+        CONTAINER_REPO = '138465306868.dkr.ecr.eu-west-3.amazonaws.com/devops/go-server'
     }
 
     stages {
