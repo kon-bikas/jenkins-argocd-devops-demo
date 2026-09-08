@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent any
 
     environment {
         CONTAINER_REPO = '138465306868.dkr.ecr.eu-west-3.amazonaws.com/devops/go-server'
