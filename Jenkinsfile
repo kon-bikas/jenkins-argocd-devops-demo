@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label 'built-in'
+    }
 
     environment {
         CONTAINER_REPO = '138465306868.dkr.ecr.eu-west-3.amazonaws.com/devops/go-server'
@@ -36,7 +38,7 @@ pipeline {
 
                     kubectl patch --local \
                         -f k8s/goserver.yml \
-                        -p '{"spec":{"template":{"spec":{"containers":[{"name":"goserver-container", "image":"${CONTAINER_REPO}:${TAG}"}]}}}}' \
+                        -p """{"spec":{"template":{"spec":{"containers":[{"name":"goserver-container", "image":"${CONTAINER_REPO}:${TAG}"}]}}}}""" \
                         -o yaml > ./k8s/goserver.yml.tmp
                         
                      mv ./k8s/goserver.yml.tmp ./k8s/goserver.yml
