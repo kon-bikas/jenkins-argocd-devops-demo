@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: goserver-service
+    namespace: default
+    labels:
+        app: server-service
+spec:
+    selector:
+        app: go-server
+    type: ClusterIP
+    ports:
+        - name: goserver-svc-port
+          protocol: TCP
+          port: 8080
+          targetPort: server-port
