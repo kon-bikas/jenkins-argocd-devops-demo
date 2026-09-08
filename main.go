@@ -7,7 +7,7 @@ import (
 
 func helloHandler(w http.ResponseWriter, r *http.Request) {
 	resp := map[string]string{
-		"version": "1.0.0",
+		"version": "2.0.0",
 		"message": "hello",
 	}
 	w.Header().Set("Content-Type", "application/json")
