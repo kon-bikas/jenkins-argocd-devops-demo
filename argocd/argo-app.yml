@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+    name: goserver-application
+    namespace: argocd
+    labels:
+        argocd-app: goserver
+spec:
+    project: default
+    source:
+        repoURL: https://github.com/kon-bikas/jenkins-argocd-devops-demo.git
+        targetRevision: HEAD
+        path: k8s
+        directory:
+            recurse: true
+    destination:
+        server: https://kubernetes.default.svc
+        namespace: default
